@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<!-- ===== Meta Pixel Code ===== -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1092282427115498');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1092282427115498&ev=PageView&noscript=1"
+/></noscript>
+<!-- ===== End Meta Pixel Code ===== -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Km Brico — 07 75 39 12 66</title>
@@ -494,7 +511,7 @@ const zoneForm=document.getElementById('formulaireZone');
 const zoneMerci=document.getElementById('merciZone');
 const erreur=document.getElementById('erreur');
 
-function ouvrir(){voile.classList.add('ouvert');document.body.style.overflow='hidden';setTimeout(()=>document.getElementById('nom').focus(),80);}
+function ouvrir(){voile.classList.add('ouvert');document.body.style.overflow='hidden';setTimeout(()=>document.getElementById('nom').focus(),80);if(typeof fbq==='function')fbq('track','InitiateCheckout');}
 function fermer(){voile.classList.remove('ouvert');document.body.style.overflow='';}
 
 document.querySelectorAll('[data-commander]').forEach(b=>b.addEventListener('click',ouvrir));
@@ -548,6 +565,7 @@ btn.addEventListener('click',async()=>{
     });
     zoneForm.style.display='none';
     zoneMerci.style.display='block';
+    if(typeof fbq==='function')fbq('track','Lead',{value:2200,currency:'DZD'});
   }catch(e){
     afficherErreur('وقع خلل في الإرسال. حاول مرة أخرى.');
   }finally{
