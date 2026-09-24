@@ -565,7 +565,7 @@ btn.addEventListener('click',async()=>{
     });
     zoneForm.style.display='none';
     zoneMerci.style.display='block';
-    if(typeof fbq==='function')fbq('track','Lead',{value:2200,currency:'DZD'});
+    if(typeof fbq==='function')fbq('track','Purchase',{value:2200,currency:'DZD'});
   }catch(e){
     afficherErreur('وقع خلل في الإرسال. حاول مرة أخرى.');
   }finally{
