@@ -556,21 +556,24 @@ btn.addEventListener('click',async()=>{
   erreur.style.display='none';
   btn.disabled=true;btn.textContent='جاري الإرسال…';
 
-  try{
-    await fetch(CONFIG.SCRIPT_URL,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(data)
-    });
-    zoneForm.style.display='none';
-    zoneMerci.style.display='block';
-    if(typeof fbq==='function')fbq('track','Purchase',{value:2200,currency:'DZD'});
-  }catch(e){
-    afficherErreur('وقع خلل في الإرسال. حاول مرة أخرى.');
-  }finally{
-    btn.disabled=false;btn.textContent='تأكيد الطلب';
-  }
+  // On déclenche Purchase tout de suite, avant d'attendre la réponse du serveur.
+  // Ainsi, même si le client change d'app ou ferme la page juste après,
+  // le pixel a déjà eu le temps de partir.
+  if(typeof fbq==='function')fbq('track','Purchase',{value:2200,currency:'DZD'});
+
+  zoneForm.style.display='none';
+  zoneMerci.style.display='block';
+  btn.disabled=false;btn.textContent='تأكيد الطلب';
+
+  // L'envoi vers Google Sheet continue en arrière-plan, sans bloquer l'affichage.
+  fetch(CONFIG.SCRIPT_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(data)
+  }).catch(()=>{
+    // Échec silencieux : le client voit déjà la confirmation, on ne le bloque pas.
+  });
 });
 
 function afficherErreur(msg){erreur.textContent=msg;erreur.style.display='block';}
