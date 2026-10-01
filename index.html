@@ -133,13 +133,11 @@ if(c.value==='')return bad(c,'المرجو اختيار البلدية');
 e.textContent='';s.disabled=true;s.textContent='جاري الإرسال...';
 var wn=WL[w.value][1],id='o'+Date.now();
 var d={الاسم:n1,الهاتف:t1,الولاية:wn,البلدية:c.value,السعر:fmt,التاريخ:new Date().toLocaleString('fr-DZ')};
-var em=fetch('https://formsubmit.co/ajax/'+CFG.EMAIL,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(Object.assign({_subject:'طلبية جديدة - قفل السيارة',_template:'table'},d))}).then(function(r){return r.ok}).catch(function(){return false});
-var sh=fetch(CFG.SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)}).then(function(){return true}).catch(function(){return false});
-Promise.all([em,sh]).then(function(r){
-if(!r[0]&&!r[1]){s.disabled=false;s.textContent='تأكيد الطلب';e.textContent='حدث خطأ، المرجو إعادة المحاولة أو الاتصال بنا على 0775391266';return}
 fbq('track','Purchase',{value:CFG.PRICE,currency:CFG.CURRENCY,content_name:'قفل مانع السرقة',num_items:1},{eventID:id});
 f.style.display='none';ok.style.display='block';
-});
+try{ok.scrollIntoView({behavior:'smooth',block:'center'})}catch(x){}
+var send=function(){return fetch(CFG.SHEET_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)})};
+send().catch(function(){setTimeout(function(){send().catch(function(){ok.insertAdjacentHTML('beforeend','<p>إذا لم نتصل بك قريبا، اتصل بنا على 0775391266</p>')})},2500)});
 });
 </script>
 </body></html>
