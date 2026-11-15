@@ -514,7 +514,7 @@ fbq('track','PageView');
       <div class="champ"><label for="wilaya">الولاية</label><select id="wilaya"><option value="">اختر الولاية</option></select></div>
       <div class="champ"><label for="commune">البلدية</label><select id="commune" disabled><option value="">اختر الولاية أولاً</option></select></div>
 
-      <p class="groupe-titre">اختر طريقة التوصيل</p>
+      <p class="groupe-titre">اختر طريقة التوصيل <small style="font-weight:400;opacity:.7">(اختياري)</small></p>
       <div class="choix" id="choixLivraison">
         <label><input type="radio" name="livraison" value="office"><span class="carte"><b>توصيل للمكتب</b><small>تستلم من مكتب شركة التوصيل</small></span></label>
         <label><input type="radio" name="livraison" value="domicile"><span class="carte"><b>توصيل للمنزل</b><small>يوصلك المندوب إلى باب بيتك</small></span></label>
@@ -659,12 +659,10 @@ btn.addEventListener('click',async()=>{
     $('tel').classList.add('invalide');
     return afficherErreur('رقم الهاتف غير صحيح — تأكد من كتابته كاملاً (جازي، موبيليس أو أوريدو).');
   }
-  if(!base.wilaya){$('wilaya').classList.add('invalide');return afficherErreur('اختر الولاية.');}
-  if(!base.commune){$('commune').classList.add('invalide');return afficherErreur('اختر البلدية.');}
-  if(!livRadio){$('choixLivraison').classList.add('invalide');return afficherErreur('اختر طريقة التوصيل: للمكتب أو للمنزل.');}
+  /* التوصيل اختياري : إذا لم يختر الزبون شيئًا يتم تأكيد الطلب عادي */
 
   erreur.style.display='none';
-  const livLabel=LIV[livRadio.value];
+  const livLabel=livRadio?LIV[livRadio.value]:'غير محدد';
   const idCmd='CMD-'+Date.now().toString(36).toUpperCase();
   const data={
     commande_id : idCmd,
@@ -675,7 +673,7 @@ btn.addEventListener('click',async()=>{
     total       : total,
     livraison   : livLabel,
     nom:base.nom, prenom:base.prenom, tel:telPropre,
-    wilaya:base.wilaya, commune:base.commune,
+    wilaya:base.wilaya||'غير محدد', commune:base.commune||'غير محدد',
     email       : CONFIG.EMAIL,
     page        : location.href,
     date        : new Date().toLocaleString('fr-DZ')
@@ -705,6 +703,7 @@ document.querySelectorAll('.champ input,.champ select').forEach(c=>{
   c.addEventListener('change',()=>c.classList.remove('invalide'));
 });
 document.querySelectorAll('input[name="livraison"]').forEach(r=>r.addEventListener('change',()=>$('choixLivraison').classList.remove('invalide')));
+
 
 </script>
 </body>
